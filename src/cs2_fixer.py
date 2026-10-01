@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-CS2 掉帧修复工具 (CS2Fixer) v1.0.0
+CS2 掉帧修复工具 (CS2Fixer) v1.0.1
 把小黑盒帖《CS2更新后爆卡,掉帧严重的罪魁祸首找到了》里的手动操作做成一键修复。
 
 流程：检查游戏进程 → 删 game\\core\\shaders_* → 清显卡/系统着色器缓存
@@ -26,7 +26,7 @@ import winreg
 
 APP_ID = 730
 APP_TITLE = "CS2 掉帧修复工具"
-APP_VERSION = "v1.0.0"
+APP_VERSION = "v1.0.1"
 CS2_DIR_NAME = "Counter-Strike Global Offensive"
 CS2_EXE = "cs2.exe"
 WATCH_INTERVAL = 3          # 完成检测轮询间隔（秒）
@@ -302,15 +302,17 @@ def list_shader_files(cs2_dir):
 
 
 def delete_files(files, log):
+    """files: [(path, size)]；返回 (成功删除的 [(path, size)], 失败 [(path, 原因)])。
+    成功项保留 size，供 save_state 写待恢复清单时校验补回。"""
     ok, fail = [], []
-    for i, (p, _) in enumerate(files, 1):
+    for i, (p, size) in enumerate(files, 1):
         log("  删除 (%d/%d) %s" % (i, len(files), os.path.basename(p)))
         if DRY_RUN:
-            ok.append(p)
+            ok.append((p, size))
             continue
         try:
             os.remove(p)
-            ok.append(p)
+            ok.append((p, size))
         except OSError as e:
             fail.append((p, str(e)))
             log("  !! 删除失败：%s（%s）" % (os.path.basename(p), e))
@@ -909,7 +911,7 @@ class App(tk.Tk):
                 if trigger_validate():
                     self.log("已发送验证请求。Steam 若没开会自动启动；启动后可能先登录再排队，请耐心等。")
                     self.log("   期间请【不要启动 CS2】。可以最小化本窗口去干别的，完成会弹窗提醒。")
-                    expect = [(p, s) for p, s in shader_files] if deleted else []
+                    expect = list(deleted) if deleted else []
                     watch_validation(self.steam, expect, self.log,
                                      lambda kind: self.ui_q.put((kind, "")), self.stop_event)
                 else:
