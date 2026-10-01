@@ -40,11 +40,16 @@ No. No admin rights needed, no services, no scheduled tasks, no Steam settings c
 ### Download
 
 Grab `CS2Fixer.exe` from the [Releases](../../releases) page.
-SHA256 of v1.0.0:
+SHA256 of v1.0.1:
 
 ```
-9FABA269D75D6A286152ACC443DA48CFA50F19AE7B2016CDFAEE9FAD7867CCF0
+992A9F3BE5199E4318DF4297FF39F75F06ECD153B3C0D3847280FB09102F647C
 ```
+
+> v1.0.0 fixed a crash: the "pending restore" list was written from a wrong data
+> shape, so the tool aborted right before triggering the Steam verification
+> (`ValueError: too many values to unpack`). Files were still restored by Steam,
+> but the automatic wait never started. Upgrade to v1.0.1.
 
 ### Build from source
 
@@ -89,11 +94,13 @@ CS2 大版本更新后爆卡、掉帧的一键修复工具。基于社区广为�
 
 ### 下载
 
-在 [Releases](../../releases) 页面下载 `CS2Fixer.exe`。v1.0.0 的 SHA256：
+在 [Releases](../../releases) 页面下载 `CS2Fixer.exe`。v1.0.1 的 SHA256：
 
 ```
-9FABA269D75D6A286152ACC443DA48CFA50F19AE7B2016CDFAEE9FAD7867CCF0
+992A9F3BE5199E4318DF4297FF39F75F06ECD153B3C0D3847280FB09102F647C
 ```
+
+> v1.0.0 有一个崩溃 bug：「待恢复清单」按错误的数据形态写入，工具会在**触发 Steam 验证之前**中断（`ValueError: too many values to unpack`）。文件仍会被 Steam 补回，但自动等待流程不会启动。请升级到 v1.0.1。
 
 ### 从源码构建
 
